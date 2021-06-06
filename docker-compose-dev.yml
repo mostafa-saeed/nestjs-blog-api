@@ -1,0 +1,22 @@
+version: '2.2'
+
+services:
+  node_app:
+    build:
+      context: .
+    ports:
+      - 3000:3000
+    environment:
+      - PORT=3000
+      - DB_CONNECTION_STRING=mongodb://mongo/development_db
+    restart: always
+    command: ./node_modules/\@nestjs/cli/bin/nest.js start --watch
+    volumes:
+      - ./src:/opt/node_app/src
+    depends_on:
+      - mongo
+
+  mongo:
+    image: mongo:4
+    ports:
+      - 27017:27017
