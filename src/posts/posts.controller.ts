@@ -9,9 +9,8 @@ import {
   Delete,
   NotFoundException,
 } from '@nestjs/common';
-import { ObjectId } from 'mongoose';
 import { PostsService } from './posts.service';
-import { ParseObjectIdPipe } from '../common/pipes/parseObjectId.pipe';
+import { GetIdDto } from '../common/dtos/getId.dto';
 import { CreatePostDto } from './dto/create-post.dto';
 import { UpdatePostDto } from './dto/update-post.dto';
 
@@ -30,40 +29,37 @@ export class PostsController {
   }
 
   @Get(':id')
-  async findOne(@Param('id', ParseObjectIdPipe) id: ObjectId) {
-    const post = await this.postsService.findOne(id);
+  async findOne(@Param() params: GetIdDto) {
+    const post = await this.postsService.findOne(params.id);
     if (!post) throw new NotFoundException('POST_NOT_FOUND');
 
     return post;
   }
 
   @Patch(':id')
-  async patch(
-    @Param('id', ParseObjectIdPipe) id: ObjectId,
-    @Body() updatePostDto: UpdatePostDto,
-  ) {
-    const post = await this.postsService.findOne(id);
+  async patch(@Param() params: GetIdDto, @Body() updatePostDto: UpdatePostDto) {
+    const post = await this.postsService.findOne(params.id);
     if (!post) throw new NotFoundException('POST_NOT_FOUND');
 
-    return this.postsService.patch(id, updatePostDto);
+    return this.postsService.patch(params.id, updatePostDto);
   }
 
   @Put(':id')
   async update(
-    @Param('id', ParseObjectIdPipe) id: ObjectId,
+    @Param() params: GetIdDto,
     @Body() createPostDto: CreatePostDto,
   ) {
-    const post = await this.postsService.findOne(id);
+    const post = await this.postsService.findOne(params.id);
     if (!post) throw new NotFoundException('POST_NOT_FOUND');
 
-    return this.postsService.update(id, createPostDto);
+    return this.postsService.update(params.id, createPostDto);
   }
 
   @Delete(':id')
-  async remove(@Param('id', ParseObjectIdPipe) id: ObjectId) {
-    const post = await this.postsService.findOne(id);
+  async remove(@Param() params: GetIdDto) {
+    const post = await this.postsService.findOne(params.id);
     if (!post) throw new NotFoundException('POST_NOT_FOUND');
 
-    return this.postsService.remove(id);
+    return this.postsService.remove(params.id);
   }
 }

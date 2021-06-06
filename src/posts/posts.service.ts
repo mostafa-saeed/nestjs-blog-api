@@ -27,7 +27,7 @@ export class PostsService {
   }
 
   update(id: ObjectId, createPostDto: CreatePostDto) {
-    return this.postModel.updateOne({ _id: id }, createPostDto);
+    return this.postModel.findOneAndUpdate({ _id: id }, createPostDto);
   }
 
   remove(id: ObjectId) {
