@@ -23,6 +23,12 @@ export class CommentsService {
     return this.commentModel.findById(id);
   }
 
+  findByPost(postID) {
+    return this.commentModel.find({
+      post: postID,
+    });
+  }
+
   patch(id: ObjectId, updateCommentDto: UpdateCommentDto) {
     return this.commentModel.updateOne({ _id: id }, updateCommentDto);
   }

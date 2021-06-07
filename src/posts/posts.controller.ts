@@ -10,13 +10,17 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import { PostsService } from './posts.service';
+import { CommentsService } from '../comments/comments.service';
 import { GetIdDto } from '../common/dtos/getId.dto';
 import { CreatePostDto } from './dto/create-post.dto';
 import { UpdatePostDto } from './dto/update-post.dto';
 
 @Controller('posts')
 export class PostsController {
-  constructor(private readonly postsService: PostsService) {}
+  constructor(
+    private readonly postsService: PostsService,
+    private readonly commentsService: CommentsService,
+  ) {}
 
   @Post()
   create(@Body() createPostDto: CreatePostDto) {
@@ -61,5 +65,15 @@ export class PostsController {
     if (!post) throw new NotFoundException('POST_NOT_FOUND');
 
     return this.postsService.remove(params.id);
+  }
+
+  @Get(':id/comments')
+  async findOneComments(@Param() params: GetIdDto) {
+    const post = await this.postsService.findOne(params.id);
+    if (!post) throw new NotFoundException('POST_NOT_FOUND');
+
+    const comments = await this.commentsService.findByPost(params.id);
+
+    return comments;
   }
 }
