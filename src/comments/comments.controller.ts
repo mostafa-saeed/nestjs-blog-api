@@ -6,6 +6,7 @@ import {
   Patch,
   Param,
   Delete,
+  NotFoundException,
 } from '@nestjs/common';
 import { ApiTags, ApiResponse, ApiOperation, ApiParam } from '@nestjs/swagger';
 import { CommentsService } from './comments.service';
@@ -51,8 +52,11 @@ export class CommentsController {
   @ApiParam({
     name: 'id',
   })
-  findOne(@Param() params: GetIdDto) {
-    return this.commentsService.findOne(params.id);
+  async findOne(@Param() params: GetIdDto) {
+    const comment = await this.commentsService.findOne(params.id);
+    if (!comment) throw new NotFoundException('COMMENT_NOT_FOUND');
+
+    return comment;
   }
 
   @Patch(':id')
@@ -68,10 +72,13 @@ export class CommentsController {
   @ApiParam({
     name: 'id',
   })
-  update(
+  async update(
     @Param() params: GetIdDto,
     @Body() updateCommentDto: UpdateCommentDto,
   ) {
+    const comment = await this.commentsService.findOne(params.id);
+    if (!comment) throw new NotFoundException('COMMENT_NOT_FOUND');
+
     return this.commentsService.patch(params.id, updateCommentDto);
   }
 
@@ -88,7 +95,10 @@ export class CommentsController {
   @ApiParam({
     name: 'id',
   })
-  remove(@Param() params: GetIdDto) {
+  async remove(@Param() params: GetIdDto) {
+    const comment = await this.commentsService.findOne(params.id);
+    if (!comment) throw new NotFoundException('COMMENT_NOT_FOUND');
+
     return this.commentsService.remove(params.id);
   }
 }
