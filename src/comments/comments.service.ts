@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { Model, ObjectId } from 'mongoose';
+import { Model } from 'mongoose';
 import { InjectModel } from '@nestjs/mongoose';
 import { CreateCommentDto } from './dto/create-comment.dto';
 import { UpdateCommentDto } from './dto/update-comment.dto';
@@ -19,7 +19,7 @@ export class CommentsService {
     return this.commentModel.find().populate('post');
   }
 
-  findOne(id: ObjectId) {
+  findOne(id: string) {
     return this.commentModel.findById(id);
   }
 
@@ -29,11 +29,11 @@ export class CommentsService {
     });
   }
 
-  patch(id: ObjectId, updateCommentDto: UpdateCommentDto) {
+  patch(id: string, updateCommentDto: UpdateCommentDto) {
     return this.commentModel.updateOne({ _id: id }, updateCommentDto);
   }
 
-  remove(id: ObjectId) {
+  remove(id: string) {
     return this.commentModel.deleteOne({ _id: id });
   }
 }

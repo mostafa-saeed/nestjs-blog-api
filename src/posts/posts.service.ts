@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { Model, ObjectId } from 'mongoose';
+import { Model } from 'mongoose';
 import { InjectModel } from '@nestjs/mongoose';
 
 import { CreatePostDto } from './dto/create-post.dto';
@@ -18,19 +18,19 @@ export class PostsService {
     return this.postModel.find();
   }
 
-  findOne(id: ObjectId) {
+  findOne(id: string) {
     return this.postModel.findById(id);
   }
 
-  patch(id: ObjectId, updatePostDto: UpdatePostDto) {
+  patch(id: string, updatePostDto: UpdatePostDto) {
     return this.postModel.updateOne({ _id: id }, updatePostDto);
   }
 
-  update(id: ObjectId, createPostDto: CreatePostDto) {
+  update(id: string, createPostDto: CreatePostDto) {
     return this.postModel.findOneAndUpdate({ _id: id }, createPostDto);
   }
 
-  remove(id: ObjectId) {
+  remove(id: string) {
     return this.postModel.deleteOne({ _id: id });
   }
 }

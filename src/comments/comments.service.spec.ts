@@ -1,6 +1,5 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { CommentsService } from './comments.service';
-import { Schema } from 'mongoose';
 import { getModelToken } from '@nestjs/mongoose';
 
 const commentModel = {
@@ -26,23 +25,18 @@ const commentModel = {
     return this.comments;
   },
 
-  findById(id) {
-    const { path: index } = id;
-    return this.comments.array[index];
+  findById(id: string) {
+    return this.comments.array[id];
   },
 
-  updateOne(filter, updateQuery: any) {
-    const {
-      _id: { path: index },
-    } = filter;
-    Object.assign(this.comments.array[index], updateQuery);
+  updateOne(filter: { _id: string }, updateQuery: any) {
+    const { _id } = filter;
+    Object.assign(this.comments.array[_id], updateQuery);
   },
 
-  deleteOne(query) {
-    const {
-      _id: { path: index },
-    } = query;
-    this.comments.array.splice(index, 1);
+  deleteOne(query: { _id: string }) {
+    const { _id } = query;
+    this.comments.array.splice(_id, 1);
   },
 };
 
@@ -63,7 +57,7 @@ describe('CommentsService', () => {
     service = module.get<CommentsService>(CommentsService);
   });
 
-  const DEFAULT_ID = new Schema.Types.ObjectId('0');
+  const DEFAULT_ID = '0';
 
   it('should be defined', () => {
     expect(service).toBeDefined();
