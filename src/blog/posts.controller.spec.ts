@@ -2,7 +2,7 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { getModelToken } from '@nestjs/mongoose';
 import { PostsController } from './posts.controller';
 import { PostsService } from './posts.service';
-import { CommentsService } from '../comments/comments.service';
+import { CommentsService } from './comments/comments.service';
 
 const postModel = {
   posts: [],

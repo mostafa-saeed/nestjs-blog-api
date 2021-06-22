@@ -11,7 +11,7 @@ import {
 } from '@nestjs/common';
 import { ApiTags, ApiResponse, ApiOperation, ApiParam } from '@nestjs/swagger';
 import { PostsService } from './posts.service';
-import { CommentsService } from '../comments/comments.service';
+import { CommentsService } from './comments/comments.service';
 import { GetIdDto } from '../common/dtos/getId.dto';
 import { CreatePostDto } from './dto/create-post.dto';
 import { UpdatePostDto } from './dto/update-post.dto';
