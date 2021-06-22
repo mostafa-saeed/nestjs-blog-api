@@ -1,4 +1,4 @@
-import { IsNotEmpty, IsString, IsMongoId } from 'class-validator';
+import { IsNotEmpty, IsString } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
 
 export class CreateCommentDto {
@@ -10,12 +10,4 @@ export class CreateCommentDto {
     format: 'string',
   })
   readonly content: string;
-
-  @IsMongoId()
-  @ApiProperty({
-    example: '60bdfe5d37160200b8e0bb27',
-    description: 'Post id',
-    format: 'string',
-  })
-  readonly post: string;
 }

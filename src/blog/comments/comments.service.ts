@@ -11,8 +11,11 @@ export class CommentsService {
     @InjectModel(Comment.name) private commentModel: Model<CommentDocument>,
   ) {}
 
-  create(createCommentDto: CreateCommentDto) {
-    return this.commentModel.create(createCommentDto);
+  create(createCommentDto: CreateCommentDto, post: string) {
+    return this.commentModel.create({
+      ...createCommentDto,
+      post,
+    });
   }
 
   findAll() {

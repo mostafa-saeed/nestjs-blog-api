@@ -10,12 +10,13 @@ import {
 } from '@nestjs/common';
 import { ApiTags, ApiResponse, ApiOperation, ApiParam } from '@nestjs/swagger';
 import { CommentsService } from './comments.service';
-import { GetIdDto } from '../../common/dtos/getId.dto';
+import { GetPostDto } from './dto/getPost.dto';
+import { GetPostCommentDto } from './dto/getPostComment.dto copy';
 import { CreateCommentDto } from './dto/create-comment.dto';
 import { UpdateCommentDto } from './dto/update-comment.dto';
 
 @ApiTags('Comments')
-@Controller('comments')
+@Controller('posts/:post/comments')
 export class CommentsController {
   constructor(private readonly commentsService: CommentsService) {}
 
@@ -25,8 +26,14 @@ export class CommentsController {
     description: 'The comment has been successfully created.',
   })
   @ApiOperation({ summary: 'Creates a comment' })
-  create(@Body() createCommentDto: CreateCommentDto) {
-    return this.commentsService.create(createCommentDto);
+  @ApiParam({
+    name: 'post',
+  })
+  create(
+    @Param() params: GetPostDto,
+    @Body() createCommentDto: CreateCommentDto,
+  ) {
+    return this.commentsService.create(createCommentDto, params.post);
   }
 
   @Get()
@@ -34,9 +41,16 @@ export class CommentsController {
     status: 200,
     description: 'An array of comments.',
   })
-  @ApiOperation({ summary: 'List blog comments' })
-  findAll() {
-    return this.commentsService.findAll();
+  @ApiResponse({
+    status: 404,
+    description: 'No posts found with the id.',
+  })
+  @ApiOperation({ summary: 'Get post comments' })
+  @ApiParam({
+    name: 'post',
+  })
+  findAll(@Param() params: GetPostDto) {
+    return this.commentsService.findByPost(params.post);
   }
 
   @Get(':id')
@@ -50,9 +64,12 @@ export class CommentsController {
   })
   @ApiOperation({ summary: 'Get a single comment' })
   @ApiParam({
+    name: 'post',
+  })
+  @ApiParam({
     name: 'id',
   })
-  async findOne(@Param() params: GetIdDto) {
+  async findOne(@Param() params: GetPostCommentDto) {
     const comment = await this.commentsService.findOne(params.id);
     if (!comment) throw new NotFoundException('COMMENT_NOT_FOUND');
 
@@ -70,10 +87,13 @@ export class CommentsController {
   })
   @ApiOperation({ summary: 'Patch a single comment' })
   @ApiParam({
+    name: 'post',
+  })
+  @ApiParam({
     name: 'id',
   })
   async update(
-    @Param() params: GetIdDto,
+    @Param() params: GetPostCommentDto,
     @Body() updateCommentDto: UpdateCommentDto,
   ) {
     const comment = await this.commentsService.findOne(params.id);
@@ -93,9 +113,12 @@ export class CommentsController {
   })
   @ApiOperation({ summary: 'Delete a single comment' })
   @ApiParam({
+    name: 'post',
+  })
+  @ApiParam({
     name: 'id',
   })
-  async remove(@Param() params: GetIdDto) {
+  async remove(@Param() params: GetPostCommentDto) {
     const comment = await this.commentsService.findOne(params.id);
     if (!comment) throw new NotFoundException('COMMENT_NOT_FOUND');
 
